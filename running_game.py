@@ -64,17 +64,17 @@ for i in range(7):
 
 images=[]
 for i in range(1,49):
-     path = f"Images\image{i}_little.png"
-     img_load=Image.open(path)
-     img_load= ImageTk.PhotoImage(img_load)
-     images.append(img_load)
+    path = f"Images\image{i}_little.png"
+    img_load=Image.open(path)
+    img_load= ImageTk.PhotoImage(img_load)
+    images.append(img_load)
 images_Big=[]
 for i in range(1,49):
-     path = f"Images\image{i}_little.png"
-     img_load=Image.open(path)
-     img_load= img_load.resize((150,150),Image.LANCZOS)
-     img_load= ImageTk.PhotoImage(img_load)
-     images_Big.append(img_load)
+    path = f"Images\image{i}_little.png"
+    img_load=Image.open(path)
+    img_load= img_load.resize((150,150),Image.LANCZOS)
+    img_load= ImageTk.PhotoImage(img_load)
+    images_Big.append(img_load)
 
 
 counter=0
@@ -82,17 +82,17 @@ myList=[]
 panels=[]
 texts_Labels=[]
 for c in coordinates:
-     global img
-     numbers_place=tk.Frame(numbers_frame,width=50, height=60)
-     numbers_place.grid(column=c[0],row=c[1])
-     numbers_text=tk.Label(numbers_place, font=('helvetica',10,'bold'),)
-     numbers_text.grid(column=0,row=1)
-     myList.append(numbers_place)
+    global img
+    numbers_place=tk.Frame(numbers_frame,width=50, height=60)
+    numbers_place.grid(column=c[0],row=c[1])
+    numbers_text=tk.Label(numbers_place, font=('helvetica',10,'bold'),)
+    numbers_text.grid(column=0,row=1)
+    myList.append(numbers_place)
     
-     paneli = tk.Label(numbers_place, image = images[counter], relief='raised',anchor='n')
-     paneli.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
-     panels.append(paneli)
-     counter+=1
+    paneli = tk.Label(numbers_place, image = images[counter], relief='raised',anchor='n')
+    paneli.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
+    panels.append(paneli)
+    counter+=1
 
 
 
@@ -154,24 +154,24 @@ def destroy_countdown():
 
 
 def draft_numbers():
-     global last_Id,images,my_Index_Draft,panel
+    global last_Id,images,my_Index_Draft,panel
      
-     my_dict=get_number_dictionary(last_Id)
-     my_Mults =[i for i in my_dict.keys()]
-     numbers_place=tk.Frame(numbers_frame,width=50, height=60)
-     numbers_place.grid(column=coordinates[my_Index_Draft][0],row=coordinates[my_Index_Draft][1])
-     numbers_text=tk.Label(numbers_place, font=('helvetica',10,'bold'),text= my_Mults[my_Index_Draft])
-     texts_Labels.append(numbers_text)
-     numbers_text.grid(column=0,row=1)
-     myList.append(numbers_place)
-     panel.destroy()
-     panel = tk.Label(main_frame_balls, image = images_Big[my_dict.get(my_Mults[my_Index_Draft])-1])
-     panel.pack(anchor='n')
-     paneli = tk.Label(numbers_place, image = images[my_dict.get(my_Mults[my_Index_Draft])-1], relief='raised',anchor='n')
-     paneli.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
-     panels.append(paneli)
-     numbers_frame.after(3300, draft_numbers)
-     my_Index_Draft+=1
+    my_dict=get_number_dictionary(last_Id)
+    my_Mults =[i for i in my_dict.keys()]
+    numbers_place=tk.Frame(numbers_frame,width=50, height=60)
+    numbers_place.grid(column=coordinates[my_Index_Draft][0],row=coordinates[my_Index_Draft][1])
+    numbers_text=tk.Label(numbers_place, font=('helvetica',10,'bold'),text= my_Mults[my_Index_Draft])
+    texts_Labels.append(numbers_text)
+    numbers_text.grid(column=0,row=1)
+    myList.append(numbers_place)
+    panel.destroy()
+    panel = tk.Label(main_frame_balls, image = images_Big[my_dict.get(my_Mults[my_Index_Draft])-1])
+    panel.pack(anchor='n')
+    paneli = tk.Label(numbers_place, image = images[my_dict.get(my_Mults[my_Index_Draft])-1], relief='raised',anchor='n')
+    paneli.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
+    panels.append(paneli)
+    numbers_frame.after(3300, draft_numbers)
+    my_Index_Draft+=1
      
 
 # w = tk.Canvas(root, width=250, height=200)
