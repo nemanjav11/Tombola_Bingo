@@ -1,7 +1,7 @@
 import sqlite3
 import random
 import os
-from tiket import get_sha1
+from ticket import get_sha1
 
 
 #DATABASE_NAME= os.path.abspath("Tombola_Bingo/game.db")
@@ -11,7 +11,10 @@ def connect_Sqlite():
     conn = sqlite3.connect('game.db')
     c = conn.cursor()
 
-
+################################################################
+#  These are codes for the database handling functions,        #
+# used for first initialization and testing purposes           #
+################################################################
 
 def create_table_numbers_played():
     connect_Sqlite()
@@ -69,6 +72,7 @@ def read_all_tickets():
     conn.close()
     return tickets
 
+## This is for first time initialization
 
 def insert_empty_ticket():
     connect_Sqlite()

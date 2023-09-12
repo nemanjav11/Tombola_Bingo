@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import END, messagebox
-from tiket import Ticket
+from ticket import Ticket
 from drafting import Game
 
 import random
@@ -19,17 +19,19 @@ def delete_all_command(entries):
         j.delete(0,END)
 
 def is_valid(number : int) -> bool:
+    """This checks if the passed ticket information is valid for the game."""
     try: 
         num = int(number)
-        if num > 48 or num < 0:
-            tk.messagebox.showinfo('Invalid Ticket', 'You entered invalid number')
+        if num > 48 or num < 0 or int(money_Entry.get())<0 or int(money_Entry.get())==ValueError:
+            tk.messagebox.showinfo('Invalid Ticket', 'You entered invalid information.')
             return False
         return True
     except ValueError: 
-        tk.messagebox.showinfo('Invalid Ticket', 'You entered invalid input')
+        tk.messagebox.showinfo('Invalid Ticket', 'You entered invalid input for money or numbers')
         return False
 
 def button_command(myList):
+    """This function handles the main button command for making the ticket"""
     myList=[]
     for index in range(0,6):
         entries[index].focus_set()
@@ -99,6 +101,8 @@ money_Entry.grid(row = 3,column = 0, columnspan = 1)
 
 
 def go_to_next_entry(event, entry_list, this_index):
+    """This function is for changing through the list of entries
+    using Enter button. """
     next_index = (this_index + 1) % len(entry_list)
     entry_list[next_index].focus_set()
 

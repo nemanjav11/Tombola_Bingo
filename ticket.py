@@ -47,7 +47,7 @@ class Ticket:
         numbers_For_Display=''
         for i in self.nums:
             numbers_For_Display=numbers_For_Display+ str(i)+', '
-        return f"Uplatili ste tiket sa brojevima : {numbers_For_Display} za iznos {self.money}, za kolo broj {self.gameId}, broj tiketa {self.lastId} ! Srecno!"
+        return f"You have created a ticket with numbers : {numbers_For_Display} for {self.money} coins, for Game no.{self.gameId}, ticket no.{self.lastId} ! Good Luck!"
         
     @classmethod
     def get_last_id(self):
@@ -92,6 +92,8 @@ class Ticket:
 
 #nums= [7,1,5,9,20,15]
 # nums=[]
+
+## For testing purposes only
 
 # money_players=[20,20,20,20,50,50,100,20]
 # for _ in range(20):
