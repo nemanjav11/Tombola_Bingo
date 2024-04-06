@@ -11,24 +11,18 @@ def connect_Sqlite():
 connect_Sqlite()
 
 
-def chk_conn(conn):
+def Check_Connection(conn):
     try:
         conn.cursor()
         return True
     except Exception as ex:
         return False
 myconn = sqlite3.connect(DATABASE_NAME)
-print(chk_conn(myconn))
+print(Check_Connection(myconn))
 
-def make_number_from_string(input_string):
-    result = ""
-    for char in input_string:
-        if char.isdigit():
-            result += char
-    return int(result) if result else None
 
 def provera_Tiketa(brojTiketa):
-    conn = sqlite3.connect(DATABASE_NAME)
+    connect_Sqlite()
     query = f"SELECT * FROM tickets  WHERE id='{brojTiketa}'"
     df= pd.read_sql_query(query,conn)
     c.execute(query)
@@ -76,25 +70,23 @@ def provera_Tiketa(brojTiketa):
                 
         for i in multipliers:
             try :
-                int(i) 
-                multipliers_valid.append(i)
+                multipliers_valid.append(int(i))
             except (NameError,ValueError): pass
             finally: pass
         multipliers = multipliers_valid
-        money_won=int(min(multipliers))* money
+        money_won=min(multipliers)* money
         money_won= money_won*mainWin
-        # if mainWin>1:
-            # print(f"ticket is winner with multiplier id {brojTiketa} you won multiplier on {stars}") 
-        # else: print(f"WINNING TICKET :  id {brojTiketa} you won : {money_won}")
+        if mainWin>1:
+            print(f"ticket is winner with multiplier id {brojTiketa} you won multiplier on {stars}") 
+        else: print(f"WINNING TICKET :  id {brojTiketa} you won : {money_won}")
         is_winner=True
 
     else: 
-        # print(f"nedobitan {brojTiketa} : broj tiketa")
-        is_winner = False   
+         print(f"nedobitan {brojTiketa} : broj tiketa")
+         is_winner = False   
     #try:
-    c.execute("UPDATE tickets SET money_won=?,is_winner=? WHERE id=?", (money_won, is_winner, brojTiketa))
+    c.execute("UPDATE tickets SET money_won=?,is_winner=? WHERE id=?", (money_won, is_winner,brojTiketa))
     #except: pass
-    print ('Status tiketa ',is_winner)
     conn.commit()
     conn.close()
 
@@ -124,9 +116,9 @@ def return_max_id_ticket():
 
  #time_start=time.time()
 for i in range(1,11352):
-    provera_Tiketa(i)
+    provera_Tiketa(i) 
 #time_stop=time.time()
 #print(time_stop - time_start)
-
+print(return_max_id_ticket())
 while True:
     provera_Tiketa(input(f"Insert a ticket number: "))

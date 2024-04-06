@@ -19,7 +19,10 @@ def is_Not_Int(integer):
         try: int(integer)
         except TypeError: return True
 
-
+def check_i(i):
+        if (i <= 0) or (i >= 49):
+            return False 
+        else : return True
 class Ticket:
     """ Creates an ticket object with tickets \n
     id, numbers, money played, gameId and date when ticket was created.\n
@@ -31,9 +34,11 @@ class Ticket:
         else:
             raise ValueError("Invalid number for ticket")  
         
-        self.validate_numbers()
-        self.nums.sort()
         self.money = money
+        self.validate_numbers()
+        if not self.ValidTicket :
+            raise ValueError("Invalid number for ticket") 
+        self.nums.sort()
         self.lastId= self.get_last_id()
         self.gameId=int(self.get_game_id())
         self.serialId= get_sha1(str(self.gameId) + str(get_sha1('SECRET_KEY')+ str(self.lastId)))
@@ -84,23 +89,37 @@ class Ticket:
         c.execute("INSERT INTO tickets (serialId, gameId, numbers, money, is_winner, date) VALUES (?,?,?,?,FALSE,?)", (self.serialId, self.gameId, str(self.nums),self.money, self.date))
         conn.commit()
         conn.close()
+        
 
     def validate_numbers(self):
+        if len(self.nums) > 0:
+                try:
+                    [int(i) for i in self.nums]
+                except TypeError : 
+                    self.ValidTicket = False
+                finally : 
+                    if len(self.nums) ==6 :
+                        for i in self.nums : 
+                            if (i >= 49) or (i <= 0) :
+                                self.ValidTicket = False
+                    
         if self.nums==[]:
             while len(self.nums) < 6 :
                 i = random.randint(0,49)
                 if i not in self.nums :
                     self.nums.append(i)
-            self.money = 30
             try:
-                int(self.gameId)
-            except AttributeError:
+                try:
+                    int(self.lastId)
+                except AttributeError:
+                    self.lastId = 0
+                finally : 
+                    int(self.gameId)
+            except AttributeError: #for the first time
                 self.gameId = 1
-            try:
-                int(self.lastId)
-            except AttributeError:
-                self.lastId = 0
-                
+        if (self.money > 1000) or (self.money < 0) :
+                raise ValueError("Invalid money")
+        self.ValidTicket = True
             #raise ValueError("You can't provide empty list")
 #a=Ticket()
 
@@ -127,3 +146,4 @@ for _ in range(1,20):
     Game()
 time_stop= time.time()
 print(time_stop-time_start) """
+Ticket([1,2,3,4,48,47],1000)
