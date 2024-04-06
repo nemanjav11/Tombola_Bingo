@@ -98,7 +98,7 @@ class Ticket:
                 except TypeError : 
                     self.ValidTicket = False
                 finally : 
-                    if len(self.nums) ==6 :
+                    if len(self.nums) == 6 :
                         for i in self.nums : 
                             if (i >= 49) or (i <= 0) :
                                 self.ValidTicket = False
