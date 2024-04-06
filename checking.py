@@ -1,14 +1,6 @@
-import sqlite3
-import pandas as pd
 import json
 import ast
-import os
-DATABASE_NAME = os.path.abspath(r'C:\Users\Kico-neco\Documents\Python\Tombola_Bingo\dist\game.db')
-def connect_Sqlite():
-    global conn,c
-    conn = sqlite3.connect(DATABASE_NAME)
-    c = conn.cursor()
-connect_Sqlite()
+from DataBaseMGT import connect_Sqlite
 
 
 def Check_Connection(conn):
@@ -20,12 +12,10 @@ def Check_Connection(conn):
 
 
 def Ticket_Check(TicketNo):
-    connect_Sqlite()
     query = f"SELECT * FROM tickets  WHERE id='{TicketNo}'"
-    df= pd.read_sql_query(query,conn)
+    conn,c = connect_Sqlite()
     c.execute(query)
     
-   
     _,_,gameId,numbers_list,money,money_won,is_winner,_= c.fetchall()[0]
     ##numbers_list = json.loads(numbers_list)
     numbers_list = ast.literal_eval(numbers_list)
@@ -88,31 +78,20 @@ def Ticket_Check(TicketNo):
     conn.commit()
     conn.close()
 
-
-
-def Payout(gameId):
-    conn = sqlite3.connect(DATABASE_NAME)
-    c=  conn.cursor()
+def Payout_Round(gameId):
+    conn,c = connect_Sqlite()
     c.execute("SELECT serialId FROM tickets WHERE gameId='{}'".format(gameId))
     ticket_winnings = c.fetchall()
-
+    conn.close()
     for i in range(0, len(ticket_winnings)):
         Ticket_Check(ticket_winnings[i][0])
 
-
-def return_max_id_ticket():
-    conn = sqlite3.connect(DATABASE_NAME)
-    c = conn.cursor()
-    c.execute("SELECT MAX(id) FROM tickets")
-    maxId = c.fetchone()[0]
-    return maxId
-
-
  #time_start=time.time()
-for i in range(1,11352):
+for i in range(2000,2001):
     Ticket_Check(i) 
 #time_stop=time.time()
 #print(time_stop - time_start)
-print(return_max_id_ticket())
-while True:
-    Ticket_Check(input(f"Insert a ticket number: "))
+
+
+if __name__ == '__main__':
+    Ticket_Check(input("Insert a ticket number"))

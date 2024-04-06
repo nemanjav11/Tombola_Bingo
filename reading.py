@@ -1,11 +1,10 @@
-import sqlite3
+from DataBaseMGT import connect_Sqlite
 import json
 import time
 
-database_name = "game.db"
-def read_all_rows(database_name):
-    conn = sqlite3.connect(database_name)
-    c = conn.cursor()
+
+def read_all_rows():
+    conn,c = connect_Sqlite()
     c.execute("SELECT * FROM numbers_played")
     rows = c.fetchall()
     for row in rows:
@@ -14,9 +13,8 @@ def read_all_rows(database_name):
 
 
 
-def read_specific_row(database_name):
-    conn = sqlite3.connect(database_name)
-    c = conn.cursor()
+def read_specific_row():
+    conn,c = connect_Sqlite()
     c.execute("SELECT * FROM numbers_played WHERE id='1'")
     rows = c.fetchall()
     for row in rows:
@@ -27,10 +25,8 @@ def read_specific_row(database_name):
 
 
 
-def get_dict_from_database(database_name):
-    conn = sqlite3.connect(database_name)
-    c = conn.cursor()
-
+def get_dict_from_database():
+    conn,c = connect_Sqlite()
     c.execute("SELECT numbers FROM numbers_played")
     dict_as_json = c.fetchone()[0]
 
@@ -40,14 +36,12 @@ def get_dict_from_database(database_name):
     conn.close()
     return dictionary
 
-##print(get_dict_from_database(database_name))
 
 
 
 
 def read_specific_winnings(id):
-    conn = sqlite3.connect(database_name)
-    c = conn.cursor()
+    conn,c = connect_Sqlite()
 
     c.execute("SELECT numbers FROM numbers_played WHERE id='{}'".format(id))
     dict_as_json = c.fetchone()[0]
@@ -67,8 +61,7 @@ def read_specific_winnings(id):
 
 
 def read_specific_ticket(id):
-    conn = sqlite3.connect(database_name)
-    c = conn.cursor()
+    conn,c = connect_Sqlite()
     c.execute("SELECT money_won FROM tickets where id ='{}'".format(id))
     tickets = c.fetchall()
     conn.close()
@@ -76,8 +69,7 @@ def read_specific_ticket(id):
 
 
 def read_all_winnings():
-    conn = sqlite3.connect(database_name)
-    c = conn.cursor()
+    conn,c = connect_Sqlite()
     c.execute("SELECT money_won FROM tickets where money_won ")
     tickets = c.fetchall()
     winnings = 0
@@ -85,30 +77,24 @@ def read_all_winnings():
         if i[0] == None:
             pass
         else: winnings += i[0]
-    print(winnings)   
     conn.close()
+    return(winnings)
 
 
 def read_all_pays():
-    conn = sqlite3.connect(database_name)
-    c = conn.cursor()
+    conn,c = connect_Sqlite()
     c.execute("SELECT money FROM tickets ")
     tickets = c.fetchall()
-    winnings = 0
+    paying = 0
     for i in tickets:
         if i[0] == None:
             pass
-        else: winnings += i[0]
-    print(winnings)   
+        else: paying += i[0]
     conn.close()
+    return(paying)
     
 
 
-
-
-
-
-
-
-print(read_all_pays()- read_all_winnings())
-
+Cash_IN = int(read_all_pays())
+Cash_OUT = int(read_all_winnings())
+print(Cash_IN - Cash_OUT)

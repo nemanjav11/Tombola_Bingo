@@ -1,54 +1,19 @@
-import sqlite3
 import hashlib
 import random
 import datetime
 import json
-import os
+from DataBaseMGT import connect_Sqlite
 
-
-
-
-
-DATABASE_NAME= "game.db"
-
-# DATABASE_NAME= os.path.abspath("Tombola_Bingo/game.db")
-
-# Connects to a database and creates a cursor object
-    
-def connect_Sqlite():
-    global conn,c
-    conn = sqlite3.connect(DATABASE_NAME)
-    c = conn.cursor()
-    
-
-        
-
-### RETURNS SHA1 hash of the string ###
-
-
-def get_sha1(input_string):
-    sha1 = hashlib.sha1()
-    sha1.update(input_string.encode('utf-8'))
-    return sha1.hexdigest()
-    
 class Game():
-    
-    
-    
-    
-    
     ## Method for inserting a new game object into the database
     
     def insert_row(self):
         SQL_INSERT_QUERY = "INSERT INTO numbers_played (serial, numbers, date, stars) VALUES (?, ?, ?, ?)"
-        connect_Sqlite()
-        
+        conn,c = connect_Sqlite()
     # Convert the dictionary to a JSON string for database compatibility
-
         dict_As_Json = json.dumps(self.numbers)
         self.date= json.dumps(datetime.datetime.now().timestamp())
         c.execute(SQL_INSERT_QUERY, (self.Serial, dict_As_Json, self.date, self.starsArray))
-        
         conn.commit()
         conn.close()
     
@@ -56,7 +21,7 @@ class Game():
    
     def add_id(self):
         GET_ID_QUERY = "SELECT id FROM numbers_played ORDER BY id DESC LIMIT 1"
-        connect_Sqlite()
+        conn,c = connect_Sqlite()
         c.execute(GET_ID_QUERY)
         try: max_Id = c.fetchone()[0]
         except TypeError: max_Id= 0 #Because we need this for the first time initialization
@@ -72,8 +37,8 @@ class Game():
             new_Id = get_sha1(str(new_Id)+get_sha1("SECRET_KEY"))
         
         self.Serial = new_Id
-        print(self.Serial)
         conn.close()
+        
 
     ## Generates the game numbers in a dictionary with multipliers
     
@@ -100,7 +65,6 @@ class Game():
 
 
     def __init__(self):
-        connect_Sqlite()
         self.generate_numbers()
         self.generate_stars()
         self.add_id()
@@ -109,3 +73,11 @@ class Game():
 
     def __str__(self):
         return f"Game object with id {self.id} and numbers {self.numbers}"    
+    
+### RETURNS SHA1 hash of the string ###
+
+
+def get_sha1(input_string):
+    sha1 = hashlib.sha1()
+    sha1.update(input_string.encode('utf-8'))
+    return sha1.hexdigest()

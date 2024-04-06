@@ -1,51 +1,39 @@
-import sqlite3
-import random
-import os
-from ticket import get_sha1
-
-
-DATABASE_NAME= os.path.abspath("Tombola_Bingo/game.db")
-#DATABASE_NAME= 'game.db'
-def connect_Sqlite():
-    global conn,c
-    conn = sqlite3.connect('game.db')
-    c = conn.cursor()
+from DataBaseMGT import *
+conn,c = connect_Sqlite()
+def MakeTables():
+    create_numbers_table()
+    create_tickets_table()
 
 ################################################################
 #  These are codes for the database handling functions,        #
 # used for first initialization and testing purposes           #
 ################################################################
 
-def create_table_numbers_played():
-    connect_Sqlite()
-    c.execute("CREATE TABLE IF NOT EXISTS numbers_played (id INTEGER PRIMARY KEY,serial TEXT, numbers TEXT, date TEXT, stars TEXT)")
+
+def add_Text_column(TableName,ColumnName):
+    
+    c.execute(f"ALTER TABLE ? ADD COLUMN ? TEXT DEFAULT NULL", TableName, ColumnName)
     conn.commit()
-    conn.close()
-
-
 
 def insert_empty_row():
-    connect_Sqlite()
-    c.execute("INSERT INTO numbers_played (serial,numbers, date) VALUES (NULL, NULL, NULL)")
+    
+    c.execute("INSERT INTO numbers_played (serial,numbers, date) VALUES (0, NULL, NULL)")
     conn.commit()
-    conn.close()
 
 
-
-
-def create_database():
-    connect_Sqlite()
-    c.execute("""CREATE TABLE numbers_played (
+def create_numbers_table():
+    
+    c.execute("""CREATE TABLE IF NOT EXISTS numbers_played (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     serial INTEGER,
                     numbers TEXT,
-                    date TEXT
+                    date TEXT,
+                    stars TEXT
                 )""")
     conn.commit()
-    conn.close()
 
 def create_tickets_table():
-    connect_Sqlite()
+    
     c.execute("""CREATE TABLE IF NOT EXISTS tickets (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     serialId TEXT NOT NULL,
@@ -56,47 +44,28 @@ def create_tickets_table():
                     is_winner BOOLEAN NOT NULL,
                     date TEXT NOT NULL)""")
     conn.commit()
-    conn.close()
 
-def drop_all_tickets():
+
+
+
+
+""" def drop_all_tickets():
     connect_Sqlite()
     c.execute("DROP TABLE tickets")
     conn.close()
     return "Succeeded"
+ """
 
-
-def read_all_tickets():
+""" def read_all_tickets():
     connect_Sqlite()
     c.execute("SELECT * FROM tickets")
     tickets = c.fetchall()
     conn.close()
-    return tickets
-
-## This is for first time initialization
-
-def insert_empty_ticket():
-    connect_Sqlite()
-    c.execute("INSERT INTO tickets (serial_Id, game_Id, numbers, money) VALUES (?,?,?,?)", (None, None, None, None))
-    conn.commit()
-    conn.close()
-
-
-
-def add_is_winner_column():
-    connect_Sqlite()
-    c.execute("ALTER TABLE tickets ADD COLUMN serial INTEGER DEFAULT NULL")
-    conn.commit()
-    conn.close()
-
-def update_serial_id(table_name, lambda_func):
-    connect_Sqlite()
-    c.execute(f'UPDATE {table_name} SET serialId = ?(serialId)', (lambda_func,))
-    conn.commit()
-    conn.close()
+    return tickets """
 
 
 #changes all the values in the certain columns to some function
-#Currently for encryption purposes 
+""" #Currently for encryption purposes 
 def apply_changes_to_rows_in_column():
     connect_Sqlite()
     c.execute("SELECT id, gameId FROM tickets")
@@ -107,24 +76,10 @@ def apply_changes_to_rows_in_column():
         print(f"THIS IS new_x {new_x} and gameId {gameId} and id {rowId}")
         c.execute(f"UPDATE tickets SET serialId = ? WHERE id = ?", (new_x, rowId))
     conn.commit()
-    conn.close()
+    conn.close() """
 
 # Example usage
 #apply_lambda_to_serial_id(database_name, "tickets")
-
-def add_stars_column():
-    connect_Sqlite()
-    c.execute("ALTER TABLE numbers_played ADD COLUMN stars TEXT DEFAULT NULL")
-    conn.commit()
-    conn.close()
-
-def add_date_column():
-    connect_Sqlite()
-    c.execute("ALTER TABLE tickets ADD COLUMN date TEXT DEFAULT NULL")
-    conn.commit()
-    conn.close()
-    print('Successfully added date column')
-
-
-
-
+if __name__ == "__main__":
+    MakeTables()
+    print('Success')

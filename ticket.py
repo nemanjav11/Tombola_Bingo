@@ -1,19 +1,8 @@
-import sqlite3
-import os
 import random
-import json
-#from drafting import Game
-import time
 import datetime
 from drafting import get_sha1, Game
+from DataBaseMGT import connect_Sqlite
 
-DATABASE_NAME = os.path.abspath(r'C:\Users\Kico-neco\Documents\Python\Tombola_Bingo\dist\game.db')
-#DATABASE_NAME= 'game.db'
-
-def connect_Sqlite():
-    conn = sqlite3.connect(DATABASE_NAME)
-    c = conn.cursor()
-    return conn,c
 
 def is_Not_Int(integer):
         try: int(integer)
@@ -35,15 +24,16 @@ class Ticket:
             raise ValueError("Invalid number for ticket")  
         
         self.money = money
+        self.RejectionReason = ''
         self.validate_numbers()
-        if not self.ValidTicket :
-            raise ValueError("Invalid number for ticket") 
         self.nums.sort()
         self.lastId= self.get_last_id()
         self.gameId=int(self.get_game_id())
         self.serialId= get_sha1(str(self.gameId) + str(get_sha1('SECRET_KEY')+ str(self.lastId)))
         self.date= datetime.datetime.now().timestamp() ## WE SHOULD ADD THIS INTO THE DATABASE 
         self.insert_ticket()
+        print(self.ValidTicket)
+        
 
         
         #print("Success!")
@@ -85,55 +75,62 @@ class Ticket:
 
 
     def insert_ticket(self):
-        conn,c = connect_Sqlite()
-        c.execute("INSERT INTO tickets (serialId, gameId, numbers, money, is_winner, date) VALUES (?,?,?,?,FALSE,?)", (self.serialId, self.gameId, str(self.nums),self.money, self.date))
-        conn.commit()
-        conn.close()
+        if self.ValidTicket:
+            conn,c = connect_Sqlite()
+            c.execute("INSERT INTO tickets (serialId, gameId, numbers, money, is_winner, date) VALUES (?,?,?,?,FALSE,?)", (self.serialId, self.gameId, str(self.nums),self.money, self.date))
+            conn.commit()
+            conn.close()
+            return 'Success'
         
 
     def validate_numbers(self):
+        if len(self.nums) >= 7:
+            self.RejectReason('Number array is too long')
         if len(self.nums) > 0:
                 try:
                     [int(i) for i in self.nums]
                 except TypeError : 
-                    self.ValidTicket = False
+                    self.RejectReason('Input not a number; ')
                 finally : 
                     if len(self.nums) == 6 :
-                        for i in self.nums : 
-                            if (i >= 49) or (i <= 0) :
-                                self.ValidTicket = False
-                    
+                        if True in list([(i<=0 or i>=49) for i in self.nums]):
+                            self.RejectReason('Invalid number in numbers list')
+                        else : 
+                            if len(set(self.nums)) < 6:
+                                self.RejectReason('Repeated number in numbers list')
+                            self.ValidTicket = True
+                        
         if self.nums==[]:
             while len(self.nums) < 6 :
-                i = random.randint(0,49)
+                i = random.randint(1,49)
                 if i not in self.nums :
                     self.nums.append(i)
+            self.ValidTicket = True
+            
+        try:
             try:
-                try:
-                    int(self.lastId)
-                except AttributeError:
-                    self.lastId = 0
-                finally : 
-                    int(self.gameId)
-            except AttributeError: #for the first time
-                self.gameId = 1
-        if (self.money > 1000) or (self.money < 0) :
-                raise ValueError("Invalid money")
-        self.ValidTicket = True
-            #raise ValueError("You can't provide empty list")
-#a=Ticket()
+                int(self.lastId)
+            except AttributeError:
+                self.lastId = 0
+            finally : 
+                int(self.gameId)
+        except AttributeError: #for the first time
+            self.gameId = 1
+        if (self.money > 1000) or (self.money < 20) :
+                self.RejectReason('Invalid money; ')
 
-#nums= [7,1,5,9,20,15]
-# nums=[]
-
-## For testing purposes only
-
-""" money_players=[20,20,20,20,50,50,100,20]
+    def RejectReason(self,ReasonStr):
+        self.RejectionReason = self.RejectionReason + ReasonStr
+        self.ValidTicket = False
+        print(self.RejectionReason)
+        exit()
+        
+money_players=[20,20,20,20,50,50,100,20,500,200]
 for _ in range(20):
     for _ in range(100):
         money_Sample=random.sample(money_players,1)
-        a=Ticket(money=money_Sample[0])
-    b=Game() """
+        a=Ticket([],money_Sample[0])
+    b=Game()
     
 
 
@@ -146,3 +143,4 @@ for _ in range(1,20):
     Game()
 time_stop= time.time()
 print(time_stop-time_start) """
+#Ticket([1,2,3,4,5,6],20)

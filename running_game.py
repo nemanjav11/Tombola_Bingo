@@ -1,35 +1,35 @@
 import tkinter as tk
 from PIL import ImageTk, Image
-from tkinter import messagebox
 from drafting import Game
-import sqlite3
 import pandas as pd
 import json
-import os
+from DataBaseMGT import connect_Sqlite
 
 
-
-
-DATABASE_NAME= os.path.abspath("game.db")
-# DATABASE_NAME= 'game.db'
-
-def connect_Sqlite():
-    global conn,c
-    conn = sqlite3.connect(DATABASE_NAME)
-    c = conn.cursor()
+conn,c = connect_Sqlite()
 # gets the latest version of the game object from the database
 def get_last_id():
-    connect_Sqlite()
-    c.execute("SELECT MAX(id) FROM numbers_played")
-    last_id = c.fetchone()[0]
+    c.execute("SELECT COUNT(*) FROM numbers_played")
+    count = c.fetchone()[0]
+
+    # Check if any rows are returned
+    if count > 0:
+        try :
+            c.execute("SELECT MAX(id) FROM numbers_played")
+        except Exception :
+            raise ImportError("Something went wrong with retrieving last game number from database")
+        finally :
+            last_id = c.fetchone()[0]
+    else:
+        last_id = 0
+        
     return last_id
 
  # transforming json string numbers from database into dictionary
 
 def get_number_dictionary(id):
     QUERY = "SELECT * FROM numbers_played"
-    with sqlite3.connect(DATABASE_NAME) as conn:
-        df_Game = pd.read_sql_query(QUERY,conn)
+    df_Game = pd.read_sql_query(QUERY,conn)
     my_Game_Dict= dict(df_Game['numbers'][df_Game['id']==id])
     for i in my_Game_Dict.values():
         global my_Game_Dicts
@@ -89,9 +89,9 @@ for c in coordinates:
     numbers_text.grid(column=0,row=1)
     myList.append(numbers_place)
     
-    paneli = tk.Label(numbers_place, image = images[counter], relief='raised',anchor='n')
-    paneli.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
-    panels.append(paneli)
+    MyPanel = tk.Label(numbers_place, image = images[counter], relief='raised',anchor='n')
+    MyPanel.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
+    panels.append(MyPanel)
     counter+=1
 
 
@@ -167,9 +167,9 @@ def draft_numbers():
     panel.destroy()
     panel = tk.Label(main_frame_balls, image = images_Big[my_dict.get(my_Mults[my_Index_Draft])-1])
     panel.pack(anchor='n')
-    paneli = tk.Label(numbers_place, image = images[my_dict.get(my_Mults[my_Index_Draft])-1], relief='raised',anchor='n')
-    paneli.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
-    panels.append(paneli)
+    MyPanel = tk.Label(numbers_place, image = images[my_dict.get(my_Mults[my_Index_Draft])-1], relief='raised',anchor='n')
+    MyPanel.grid(column=0,row=0,sticky='nswe',padx=15,pady=10)
+    panels.append(MyPanel)
     numbers_frame.after(3300, draft_numbers)
     my_Index_Draft+=1
      

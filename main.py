@@ -1,8 +1,6 @@
 import tkinter as tk
-from tkinter import END, messagebox
+from tkinter import END
 from ticket import Ticket
-from drafting import Game
-
 import random
 
 
@@ -12,7 +10,7 @@ def button_clear(e):
     return e.delete(0,END)
 
 def delete_all_command(entries):
-    """Deletes all inputed information from the tkinter window"""
+    """Deletes all input information from the tkinter window"""
     money_Entry.delete(0,END)
     money_Entry.insert(0,'20')
     for i,j in enumerate(entries):
