@@ -1,4 +1,4 @@
-.vscode/*
+.vscode/
 .snapshots/*
 Images/*
 kinter_interface/*
