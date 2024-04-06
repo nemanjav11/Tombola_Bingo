@@ -63,14 +63,14 @@ def Ticket_Check(TicketNo):
             finally: pass
         multipliers = multipliers_valid
         money_won=min(multipliers)* money
-        money_won= money_won*mainWin
-        if mainWin>1:
-            print(f"ticket is winner with multiplier id {TicketNo} you won multiplier on {stars}") 
-        else: print(f"WINNING TICKET :  id {TicketNo} you won : {money_won}")
+        money_won= money_won * mainWin
+        #if mainWin>1:
+            #print(f"ticket is winner with multiplier id {TicketNo} you won multiplier on {stars}") 
+        #else: print(f"WINNING TICKET :  id {TicketNo} you won : {money_won}")
         is_winner=True
 
     else: 
-         print(f"Loss - {TicketNo} : Ticket No.")
+         #print(f"Loss - {TicketNo} : Ticket No.")
          is_winner = False   
     #try:
     c.execute("UPDATE tickets SET money_won=?,is_winner=? WHERE id=?", (money_won, is_winner,TicketNo))
@@ -87,11 +87,12 @@ def Payout_Round(gameId):
         Ticket_Check(ticket_winnings[i][0])
 
  #time_start=time.time()
-for i in range(2000,2001):
-    Ticket_Check(i) 
+
 #time_stop=time.time()
 #print(time_stop - time_start)
 
 
 if __name__ == '__main__':
+    for i in range(1,27075):
+        Ticket_Check(i) 
     Ticket_Check(input("Insert a ticket number"))

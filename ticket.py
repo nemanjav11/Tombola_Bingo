@@ -122,18 +122,14 @@ class Ticket:
     def RejectReason(self,ReasonStr):
         self.RejectionReason = self.RejectionReason + ReasonStr
         self.ValidTicket = False
-        print(self.RejectionReason)
         exit()
         
 money_players=[20,20,20,20,50,50,100,20,500,200]
-for _ in range(20):
-    for _ in range(100):
+for _ in range(500):
+    for _ in range(50):
         money_Sample=random.sample(money_players,1)
         a=Ticket([],money_Sample[0])
     b=Game()
-    
-
-
 
 """ money_players=[20,20,20,20,50,50,100,20]
 time_start=time.time()

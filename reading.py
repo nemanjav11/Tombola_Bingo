@@ -97,4 +97,6 @@ def read_all_pays():
 
 Cash_IN = int(read_all_pays())
 Cash_OUT = int(read_all_winnings())
+print('Money in "{}", Money out "{}"'.format(Cash_IN,Cash_OUT))
 print(Cash_IN - Cash_OUT)
+ 
