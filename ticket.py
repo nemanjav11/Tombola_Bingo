@@ -7,8 +7,8 @@ import time
 import datetime
 from drafting import get_sha1, Game
 
-# DATABASE_NAME= os.path.abspath("Tombola_Bingo/game.db")
-DATABASE_NAME= 'game.db'
+DATABASE_NAME = os.path.abspath(r'C:\Users\Kico-neco\Documents\Python\Tombola_Bingo\dist\game.db')
+#DATABASE_NAME= 'game.db'
 
 def connect_Sqlite():
     conn = sqlite3.connect(DATABASE_NAME)
@@ -87,7 +87,21 @@ class Ticket:
 
     def validate_numbers(self):
         if self.nums==[]:
-            raise ValueError("You can't provide empty list")
+            while len(self.nums) < 6 :
+                i = random.randint(0,49)
+                if i not in self.nums :
+                    self.nums.append(i)
+            self.money = 30
+            try:
+                int(self.gameId)
+            except AttributeError:
+                self.gameId = 1
+            try:
+                int(self.lastId)
+            except AttributeError:
+                self.lastId = 0
+                
+            #raise ValueError("You can't provide empty list")
 #a=Ticket()
 
 #nums= [7,1,5,9,20,15]
@@ -95,21 +109,21 @@ class Ticket:
 
 ## For testing purposes only
 
-# money_players=[20,20,20,20,50,50,100,20]
-# for _ in range(20):
-#     for _ in range(100):
-#         money_Sample=random.sample(money_players,1)
-#         a=Ticket(money=money_Sample[0])
-#     b=Game()
+""" money_players=[20,20,20,20,50,50,100,20]
+for _ in range(20):
+    for _ in range(100):
+        money_Sample=random.sample(money_players,1)
+        a=Ticket(money=money_Sample[0])
+    b=Game() """
     
 
 
 
-# money_players=[20,20,20,20,50,50,100,20]
-# time_start=time.time()
-# for _ in range(1,20):
-#     for i in range (1,500):
-#         Ticket()
-#     Game()
-# time_stop= time.time()
-# print(time_stop-time_start)
+""" money_players=[20,20,20,20,50,50,100,20]
+time_start=time.time()
+for _ in range(1,20):
+    for i in range (1,500):
+        Ticket()
+    Game()
+time_stop= time.time()
+print(time_stop-time_start) """

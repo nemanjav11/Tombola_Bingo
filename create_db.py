@@ -4,8 +4,8 @@ import os
 from ticket import get_sha1
 
 
-#DATABASE_NAME= os.path.abspath("Tombola_Bingo/game.db")
-DATABASE_NAME= 'game.db'
+DATABASE_NAME= os.path.abspath("Tombola_Bingo/game.db")
+#DATABASE_NAME= 'game.db'
 def connect_Sqlite():
     global conn,c
     conn = sqlite3.connect('game.db')
@@ -126,6 +126,5 @@ def add_date_column():
     print('Successfully added date column')
 
 
-create_tickets_table()
-create_table_numbers_played()
+
 

@@ -1,9 +1,24 @@
 import sqlite3
 import pandas as pd
 import json
-import time
+import ast
 import os
-DATABASE_NAME = os.path.abspath(r'C:\Users\Kico-neco\Documents\Python\Tombola_Bingo\game.db')
+DATABASE_NAME = os.path.abspath(r'C:\Users\Kico-neco\Documents\Python\Tombola_Bingo\dist\game.db')
+def connect_Sqlite():
+    global conn,c
+    conn = sqlite3.connect(DATABASE_NAME)
+    c = conn.cursor()
+connect_Sqlite()
+
+
+def chk_conn(conn):
+    try:
+        conn.cursor()
+        return True
+    except Exception as ex:
+        return False
+myconn = sqlite3.connect(DATABASE_NAME)
+print(chk_conn(myconn))
 
 def make_number_from_string(input_string):
     result = ""
@@ -16,13 +31,15 @@ def provera_Tiketa(brojTiketa):
     conn = sqlite3.connect(DATABASE_NAME)
     query = f"SELECT * FROM tickets  WHERE id='{brojTiketa}'"
     df= pd.read_sql_query(query,conn)
-    
+    c.execute(query)
     
    
-    
     _,_,gameId,numbers_list,money,money_won,is_winner,_= c.fetchall()[0]
-    numbers_list= json.loads(numbers_list)
-   
+    ##numbers_list = json.loads(numbers_list)
+    numbers_list = ast.literal_eval(numbers_list)
+    numbers_list= [int(num) for num in numbers_list]
+
+
     c.execute("SELECT numbers FROM numbers_played WHERE id='{}'".format(gameId))
     dict_as_json = c.fetchone()
     
@@ -55,8 +72,15 @@ def provera_Tiketa(brojTiketa):
         for key,value in dictionary.items():
             if value in numbers_list:
                 multipliers.append(key)
+        multipliers_valid = []
                 
-        
+        for i in multipliers:
+            try :
+                int(i) 
+                multipliers_valid.append(i)
+            except (NameError,ValueError): pass
+            finally: pass
+        multipliers = multipliers_valid
         money_won=int(min(multipliers))* money
         money_won= money_won*mainWin
         # if mainWin>1:
@@ -67,9 +91,10 @@ def provera_Tiketa(brojTiketa):
     else: 
         # print(f"nedobitan {brojTiketa} : broj tiketa")
         is_winner = False   
-    try:
-        c.execute("UPDATE tickets SET money_won=?,is_winner=? WHERE id=?", (money_won, is_winner, brojTiketa))
-    except: pass
+    #try:
+    c.execute("UPDATE tickets SET money_won=?,is_winner=? WHERE id=?", (money_won, is_winner, brojTiketa))
+    #except: pass
+    print ('Status tiketa ',is_winner)
     conn.commit()
     conn.close()
 
@@ -97,10 +122,11 @@ def return_max_id_ticket():
     return maxId
 
 
-time_start=time.time()
-for i in range(0,2):
+ #time_start=time.time()
+for i in range(1,11352):
     provera_Tiketa(i)
-time_stop=time.time()
-print(time_stop - time_start)
+#time_stop=time.time()
+#print(time_stop - time_start)
 
-# provera_Tiketa(input(f"Insert a ticket number: "))
+while True:
+    provera_Tiketa(input(f"Insert a ticket number: "))
