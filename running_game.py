@@ -6,9 +6,11 @@ import json
 from databaseMGT import connect_Sqlite
 
 
-conn,c = connect_Sqlite()
+
 # gets the latest version of the game object from the database
 def get_last_id():
+    conn,c = connect_Sqlite()
+    c= conn.cursor()
     c.execute("SELECT COUNT(*) FROM numbers_played")
     count = c.fetchone()[0]
 
@@ -28,6 +30,7 @@ def get_last_id():
  # transforming json string numbers from database into dictionary
 
 def get_number_dictionary(id):
+    conn,_ = connect_Sqlite()
     QUERY = "SELECT * FROM numbers_played"
     df_Game = pd.read_sql_query(QUERY,conn)
     my_Game_Dict= dict(df_Game['numbers'][df_Game['id']==id])
