@@ -15,15 +15,13 @@ def Check_Connection(conn):
     try:
         conn.cursor()
         return True
-    except Exception as ex:
+    except Exception:
         return False
-myconn = sqlite3.connect(DATABASE_NAME)
-print(Check_Connection(myconn))
 
 
-def provera_Tiketa(brojTiketa):
+def Ticket_Check(TicketNo):
     connect_Sqlite()
-    query = f"SELECT * FROM tickets  WHERE id='{brojTiketa}'"
+    query = f"SELECT * FROM tickets  WHERE id='{TicketNo}'"
     df= pd.read_sql_query(query,conn)
     c.execute(query)
     
@@ -77,33 +75,29 @@ def provera_Tiketa(brojTiketa):
         money_won=min(multipliers)* money
         money_won= money_won*mainWin
         if mainWin>1:
-            print(f"ticket is winner with multiplier id {brojTiketa} you won multiplier on {stars}") 
-        else: print(f"WINNING TICKET :  id {brojTiketa} you won : {money_won}")
+            print(f"ticket is winner with multiplier id {TicketNo} you won multiplier on {stars}") 
+        else: print(f"WINNING TICKET :  id {TicketNo} you won : {money_won}")
         is_winner=True
 
     else: 
-         print(f"nedobitan {brojTiketa} : broj tiketa")
+         print(f"Loss - {TicketNo} : Ticket No.")
          is_winner = False   
     #try:
-    c.execute("UPDATE tickets SET money_won=?,is_winner=? WHERE id=?", (money_won, is_winner,brojTiketa))
+    c.execute("UPDATE tickets SET money_won=?,is_winner=? WHERE id=?", (money_won, is_winner,TicketNo))
     #except: pass
     conn.commit()
     conn.close()
 
-#provera_Tiketa(1591)
-#provera_Tiketa(1592)
 
 
-
-
-def isplata(gameId):
+def Payout(gameId):
     conn = sqlite3.connect(DATABASE_NAME)
     c=  conn.cursor()
     c.execute("SELECT serialId FROM tickets WHERE gameId='{}'".format(gameId))
     ticket_winnings = c.fetchall()
 
     for i in range(0, len(ticket_winnings)):
-        provera_Tiketa(ticket_winnings[i][0])
+        Ticket_Check(ticket_winnings[i][0])
 
 
 def return_max_id_ticket():
@@ -116,9 +110,9 @@ def return_max_id_ticket():
 
  #time_start=time.time()
 for i in range(1,11352):
-    provera_Tiketa(i) 
+    Ticket_Check(i) 
 #time_stop=time.time()
 #print(time_stop - time_start)
 print(return_max_id_ticket())
 while True:
-    provera_Tiketa(input(f"Insert a ticket number: "))
+    Ticket_Check(input(f"Insert a ticket number: "))
