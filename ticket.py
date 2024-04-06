@@ -1,7 +1,7 @@
 import random
 import datetime
 from drafting import get_sha1, Game
-from DataBaseMGT import connect_Sqlite
+from databaseMGT import connect_Sqlite
 
 
 def is_Not_Int(integer):

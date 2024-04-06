@@ -1,6 +1,6 @@
 import json
 import ast
-from DataBaseMGT import connect_Sqlite
+from databaseMGT import connect_Sqlite
 
 
 def Check_Connection(conn):

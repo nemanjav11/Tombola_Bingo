@@ -1,4 +1,4 @@
-from DataBaseMGT import connect_Sqlite
+from databaseMGT import connect_Sqlite
 import json
 import time
 
