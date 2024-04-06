@@ -146,4 +146,3 @@ for _ in range(1,20):
     Game()
 time_stop= time.time()
 print(time_stop-time_start) """
-Ticket([1,2,3,4,48,47],1000)
