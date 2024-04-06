@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import END
+from tkinter import END,messagebox
 from ticket import Ticket
 import random
 

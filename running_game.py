@@ -3,7 +3,7 @@ from PIL import ImageTk, Image
 from drafting import Game
 import pandas as pd
 import json
-from DataBaseMGT import connect_Sqlite
+from databaseMGT import connect_Sqlite
 
 
 conn,c = connect_Sqlite()

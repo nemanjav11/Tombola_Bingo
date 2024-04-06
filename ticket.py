@@ -32,7 +32,7 @@ class Ticket:
         self.serialId= get_sha1(str(self.gameId) + str(get_sha1('SECRET_KEY')+ str(self.lastId)))
         self.date= datetime.datetime.now().timestamp() ## WE SHOULD ADD THIS INTO THE DATABASE 
         self.insert_ticket()
-        print(self.ValidTicket)
+        #print(self.ValidTicket)
         
 
         
@@ -93,7 +93,7 @@ class Ticket:
                     self.RejectReason('Input not a number; ')
                 finally : 
                     if len(self.nums) == 6 :
-                        if True in list([(i<=0 or i>=49) for i in self.nums]):
+                        if True in list([(int(i)<=0 or int(i)>=49) for i in self.nums]):
                             self.RejectReason('Invalid number in numbers list')
                         else : 
                             if len(set(self.nums)) < 6:
@@ -124,12 +124,12 @@ class Ticket:
         self.ValidTicket = False
         exit()
         
-money_players=[20,20,20,20,50,50,100,20,500,200]
-for _ in range(500):
+""" money_players=[20,20,20,20,50,50,100,20,500,200]
+for _ in range(1000):
     for _ in range(50):
         money_Sample=random.sample(money_players,1)
         a=Ticket([],money_Sample[0])
-    b=Game()
+    b=Game() """
 
 """ money_players=[20,20,20,20,50,50,100,20]
 time_start=time.time()

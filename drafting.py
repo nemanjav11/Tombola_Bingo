@@ -2,7 +2,7 @@ import hashlib
 import random
 import datetime
 import json
-from DataBaseMGT import connect_Sqlite
+from databaseMGT import connect_Sqlite
 
 class Game():
     ## Method for inserting a new game object into the database

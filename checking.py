@@ -93,6 +93,6 @@ def Payout_Round(gameId):
 
 
 if __name__ == '__main__':
-    for i in range(1,27075):
+    for i in range(27075,78251):
         Ticket_Check(i) 
     Ticket_Check(input("Insert a ticket number"))
