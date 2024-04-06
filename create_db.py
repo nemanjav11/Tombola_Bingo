@@ -1,4 +1,4 @@
-from DataBaseMGT import *
+from databaseMGT import *
 conn,c = connect_Sqlite()
 def MakeTables():
     create_numbers_table()
